@@ -50,6 +50,7 @@ Each active compression feature has a `config.json` key and an environment overr
 | `TOKEN_OPTIMIZER_FIRST_READ_SHADOW` | enabled | Set to `0` to disable both first-read skeleton measurement and active first-read skeleton serving |
 | `TOKEN_OPTIMIZER_FIRST_READ_ACTIVE` | enabled | Set to `0` to disable active first-read skeleton serving for promoted cohorts |
 | `TOKEN_OPTIMIZER_VERBOSITY_MIN_FILL` | `25` | Gentle lean-output nudge fill floor; below 75% fill it also requires session efficiency below 75. At 75-89% the strong tier uses fill alone; at 90%+ no context is added |
+| `TOKEN_OPTIMIZER_HIDE_NUDGE` | off | Set to `1` to hide the lean-output nudge's on-screen echo (hook `suppressOutput`) while it keeps steering the model. `0`, `false`, `no`, `off` or empty show it. The matching `config.json` key is `hide_nudge`; the env var wins. |
 
 The matching `config.json` keys are: `v5_bash_compress`, `read_cache_enabled`, `v5_delta_mode`, `v5_structure_map_beta`, `v5_quality_nudges`, `v5_loop_detection`, `v5_first_read_shadow`, and `v5_first_read_active` (the `v5_` prefix is a legacy naming convention; the features are current). Manage the `v5_` gates with `measure.py v5 enable|disable <feature>`. The read-cache master gate has its separate environment override.
 

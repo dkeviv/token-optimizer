@@ -7021,13 +7021,24 @@ def run_verbosity_steer(transcript_path=None, quiet=None, session_id=None):
         if not nudge:
             return ""
 
-        payload = _measure_facade.json.dumps({
+        _out = {
             "continue": True,
             "hookSpecificOutput": {
                 "hookEventName": "UserPromptSubmit",
                 "additionalContext": nudge,
             },
-        })
+        }
+        # Hide the nudge's on-screen echo, never the nudge itself (it still steers
+        # the model). TOKEN_OPTIMIZER_HIDE_NUDGE (truthy; 0/false/no/off/empty = show)
+        # beats config.json `hide_nudge`. Mirrors Ponytail's PONYTAIL_HIDE_STATUS.
+        _hide_env = _measure_facade.os.environ.get("TOKEN_OPTIMIZER_HIDE_NUDGE")
+        if _hide_env is not None:
+            _hide = _hide_env.strip().lower() not in ("", "0", "false", "no", "off")
+        else:
+            _hide = bool(_measure_facade._read_config_flag("hide_nudge", False))
+        if _hide:
+            _out["suppressOutput"] = True
+        payload = _measure_facade.json.dumps(_out)
 
         # U5: book 0 at nudge time. The old code booked a hardcoded
         # 10-15% x 800 ASSUMED saving the moment the nudge fired, without
